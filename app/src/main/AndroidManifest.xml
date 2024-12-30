@@ -35,6 +35,8 @@
         <activity android:name=".CharacterActivity" />
 
         <activity android:name=".TestActivity1" />
+        <service
+            android:name="com.inuker.bluetooth.library.BluetoothService" />
 
     </application>
 

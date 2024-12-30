@@ -1,0 +1,74 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.bintray'
+
+version="1.4.0"
+
+android {
+    namespace "com.inuker.bluetooth.library"
+    compileSdkVersion 27
+
+
+    resourcePrefix "bluetoothkit_"
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+}
+
+def siteUrl = 'https://github.com/dingjikerbo/BluetoothKit' // ��Ŀ����ҳ
+def gitUrl = 'https://github.com/dingjikerbo/BluetoothKit.git' // Git�ֿ��url
+group = "com.inuker.bluetooth" // Maven Group ID for the artifact��һ������Ψһ�İ���
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                // Add your description here
+                name 'Android Bluetooth Library' //��Ŀ����
+                url siteUrl
+                // Set your license
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'dingjikerbo'    //��д��һЩ������Ϣ
+                        name 'inuker'
+                        email 'dingjikerbo@gmail.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+//    classifier = 'sources' // Set the classifier here
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+

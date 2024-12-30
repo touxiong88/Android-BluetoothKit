@@ -1,4 +1,4 @@
-package com.inuker.bluetooth.library.channel.packet;
+package com.inuker.bluetooth.library;
 
 import java.nio.ByteBuffer;
 

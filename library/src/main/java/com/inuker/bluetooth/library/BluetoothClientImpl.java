@@ -38,6 +38,7 @@ import com.inuker.bluetooth.library.utils.ListUtils;
 import com.inuker.bluetooth.library.utils.proxy.ProxyBulk;
 import com.inuker.bluetooth.library.utils.proxy.ProxyInterceptor;
 import com.inuker.bluetooth.library.utils.proxy.ProxyUtils;
+//import com.inuker.bluetooth.library.IBluetoothService;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
 
     private Context mContext;
 
-    private volatile IBluetoothService mBluetoothService;
+    private volatile BluetoothService mBluetoothService;
 
     private volatile static IBluetoothClient sInstance;
 
@@ -140,7 +141,7 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
         return sInstance;
     }
 
-    private IBluetoothService getBluetoothService() {
+    private BluetoothService getBluetoothService() {
 //        BluetoothLog.v(String.format("getBluetoothService"));
         if (mBluetoothService == null) {
             bindServiceSync();
