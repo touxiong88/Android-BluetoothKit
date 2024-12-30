@@ -164,7 +164,8 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
             waitBluetoothManagerReady();
         } else {
 //            BluetoothLog.v(String.format("BluetoothService not registered"));
-            mBluetoothService = BluetoothServiceImpl.getInstance();
+            //mBluetoothService = BluetoothServiceImpl.getInstance(); //todo hogan
+
         }
     }
 
@@ -172,7 +173,7 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
 //            BluetoothLog.v(String.format("onServiceConnected"));
-            mBluetoothService = IBluetoothService.Stub.asInterface(service);
+            //mBluetoothService = IBluetoothService.Stub.asInterface(service); //todo hogan
             notifyBluetoothManagerReady();
         }
 
@@ -552,8 +553,8 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
 //        BluetoothLog.v(String.format("safeCallBluetoothApi code = %d", code));
 
         try {
-            IBluetoothService service = getBluetoothService();
-
+            //IBluetoothService service = getBluetoothService(); //todo hogan
+            IBluetoothService service = null;
 //            BluetoothLog.v(String.format("IBluetoothService = %s", service));
 
             if (service != null) {

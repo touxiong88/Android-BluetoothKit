@@ -150,33 +150,28 @@ public class CharacterActivity extends Activity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.read:
-                ClientManager.getClient().read(mMac, mService, mCharacter, mReadRsp);
-                break;
-            case R.id.write:
-                ClientManager.getClient().write(mMac, mService, mCharacter,
-                        ByteUtils.stringToBytes(mEtInput.getText().toString()), mWriteRsp);
-                break;
-            case R.id.notify:
-                ClientManager.getClient().notify(mMac, mService, mCharacter, mNotifyRsp);
-                break;
-            case R.id.unnotify:
-                ClientManager.getClient().unnotify(mMac, mService, mCharacter, mUnnotifyRsp);
-                break;
-            case R.id.btn_request_mtu:
-                String mtuStr = mEtInputMtu.getText().toString();
-                if (TextUtils.isEmpty(mtuStr)) {
-                    CommonUtils.toast("MTU不能为空");
-                    return;
-                }
-                int mtu = Integer.parseInt(mtuStr);
-                if (mtu < GATT_DEF_BLE_MTU_SIZE || mtu > GATT_MAX_MTU_SIZE) {
-                    CommonUtils.toast("MTU不不在范围内");
-                    return;
-                }
-                ClientManager.getClient().requestMtu(mMac, mtu, mMtuResponse);
-                break;
+        int id = v.getId();
+        if (id == R.id.read) {
+            ClientManager.getClient().read(mMac, mService, mCharacter, mReadRsp);
+        } else if (id == R.id.write) {
+            ClientManager.getClient().write(mMac, mService, mCharacter,
+                    ByteUtils.stringToBytes(mEtInput.getText().toString()), mWriteRsp);
+        } else if (id == R.id.notify) {
+            ClientManager.getClient().notify(mMac, mService, mCharacter, mNotifyRsp);
+        } else if (id == R.id.unnotify) {
+            ClientManager.getClient().unnotify(mMac, mService, mCharacter, mUnnotifyRsp);
+        } else if (id == R.id.btn_request_mtu) {
+            String mtuStr = mEtInputMtu.getText().toString();
+            if (TextUtils.isEmpty(mtuStr)) {
+                CommonUtils.toast("MTU不能为空");
+                return;
+            }
+            int mtu = Integer.parseInt(mtuStr);
+            if (mtu < GATT_DEF_BLE_MTU_SIZE || mtu > GATT_MAX_MTU_SIZE) {
+                CommonUtils.toast("MTU不不在范围内");
+                return;
+            }
+            ClientManager.getClient().requestMtu(mMac, mtu, mMtuResponse);
         }
     }
 
