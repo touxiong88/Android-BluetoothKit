@@ -23,9 +23,7 @@ import static com.inuker.bluetooth.library.Constants.*;
 
 import java.util.UUID;
 
-/**
- * Created by dingjikerbo on 2016/9/6.
- */
+
 public class CharacterActivity extends Activity implements View.OnClickListener {
 
     private String mMac;

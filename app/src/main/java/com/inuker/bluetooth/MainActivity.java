@@ -1,7 +1,11 @@
 package com.inuker.bluetooth;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity {
-
+    private static final String TAG = MainActivity.class.getSimpleName();
     private static final String MAC = "B0:D5:9D:6F:E7:A5";
 
     private PullToRefreshFrameLayout mRefreshLayout;
@@ -42,8 +46,27 @@ public class MainActivity extends Activity {
         mAdapter = new DeviceListAdapter(this);
         mListView.setAdapter(mAdapter);
 
-        mListView.setOnRefreshListener(new PullRefreshListView.OnRefreshListener() {
 
+
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Log.d(TAG,"This machine does not support low-power Bluetooth！");
+            finish();
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    , Manifest.permission.READ_EXTERNAL_STORAGE
+                    , Manifest.permission.ACCESS_COARSE_LOCATION};
+            for (String str : permissions) {
+                if (checkSelfPermission(str) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(permissions, 111);
+                    break;
+                }
+            }
+        }
+
+        mListView.setOnRefreshListener(new PullRefreshListView.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 // TODO Auto-generated method stub
