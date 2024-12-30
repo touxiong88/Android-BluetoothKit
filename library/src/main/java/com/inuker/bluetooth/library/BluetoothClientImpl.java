@@ -38,7 +38,6 @@ import com.inuker.bluetooth.library.utils.ListUtils;
 import com.inuker.bluetooth.library.utils.proxy.ProxyBulk;
 import com.inuker.bluetooth.library.utils.proxy.ProxyInterceptor;
 import com.inuker.bluetooth.library.utils.proxy.ProxyUtils;
-//import com.inuker.bluetooth.library.IBluetoothService;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -96,7 +95,7 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
 
     private Context mContext;
 
-    private volatile BluetoothService mBluetoothService;
+    private volatile IBluetoothService mBluetoothService;
 
     private volatile static IBluetoothClient sInstance;
 
@@ -141,7 +140,7 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
         return sInstance;
     }
 
-    private BluetoothService getBluetoothService() {
+    private IBluetoothService getBluetoothService() {
 //        BluetoothLog.v(String.format("getBluetoothService"));
         if (mBluetoothService == null) {
             bindServiceSync();
@@ -164,8 +163,7 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
             waitBluetoothManagerReady();
         } else {
 //            BluetoothLog.v(String.format("BluetoothService not registered"));
-            //mBluetoothService = BluetoothServiceImpl.getInstance(); //todo hogan
-
+            mBluetoothService = BluetoothServiceImpl.getInstance();
         }
     }
 
@@ -173,7 +171,7 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
 //            BluetoothLog.v(String.format("onServiceConnected"));
-            //mBluetoothService = IBluetoothService.Stub.asInterface(service); //todo hogan
+            mBluetoothService = IBluetoothService.Stub.asInterface(service);
             notifyBluetoothManagerReady();
         }
 
@@ -553,8 +551,8 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
 //        BluetoothLog.v(String.format("safeCallBluetoothApi code = %d", code));
 
         try {
-            //IBluetoothService service = getBluetoothService(); //todo hogan
-            IBluetoothService service = null;
+            IBluetoothService service = getBluetoothService();
+
 //            BluetoothLog.v(String.format("IBluetoothService = %s", service));
 
             if (service != null) {
