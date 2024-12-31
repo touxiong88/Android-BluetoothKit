@@ -11,6 +11,7 @@ import com.inuker.bluetooth.library.connect.response.BleReadResponse;
 import com.inuker.bluetooth.library.connect.response.BleReadRssiResponse;
 import com.inuker.bluetooth.library.connect.response.BleUnnotifyResponse;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
+import com.inuker.bluetooth.library.connect.response.BluetoothGattResponse;
 import com.inuker.bluetooth.library.receiver.listener.BluetoothBondListener;
 import com.inuker.bluetooth.library.connect.listener.BluetoothStateListener;
 import com.inuker.bluetooth.library.search.SearchRequest;
@@ -216,5 +217,9 @@ public class BluetoothClient implements IBluetoothClient {
     @Override
     public void refreshCache(String mac) {
         mClient.refreshCache(mac);
+    }
+
+    public void setBluetoothGattResponse(BluetoothGattResponse tag) {
+
     }
 }

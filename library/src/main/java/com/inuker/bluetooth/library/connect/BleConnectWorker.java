@@ -37,7 +37,7 @@ import com.inuker.bluetooth.library.utils.Version;
 import com.inuker.bluetooth.library.utils.proxy.ProxyBulk;
 import com.inuker.bluetooth.library.utils.proxy.ProxyInterceptor;
 import com.inuker.bluetooth.library.utils.proxy.ProxyUtils;
-
+import com.inuker.bluetooth.library.connect.listener.IBluetoothGattResponse;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
