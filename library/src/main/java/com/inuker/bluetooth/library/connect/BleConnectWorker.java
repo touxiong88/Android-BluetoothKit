@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 import com.inuker.bluetooth.library.Constants;
 import com.inuker.bluetooth.library.RuntimeChecker;
@@ -38,6 +39,10 @@ import com.inuker.bluetooth.library.utils.proxy.ProxyInterceptor;
 import com.inuker.bluetooth.library.utils.proxy.ProxyUtils;
 
 import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +72,8 @@ public class BleConnectWorker implements Handler.Callback, IBleConnectWorker, IB
 
     private RuntimeChecker mRuntimeChecker;
 
+    private static final UUID CLIENT_CHARACTERISTIC_CONFIG = UUID.fromString("00002902-0000-1000-8000-00805F9B34FB");
+
     public BleConnectWorker(String mac, RuntimeChecker runtimeChecker) {
         BluetoothAdapter adapter = BluetoothUtils.getBluetoothAdapter();
         if (adapter != null) {
@@ -85,11 +92,11 @@ public class BleConnectWorker implements Handler.Callback, IBleConnectWorker, IB
         BluetoothLog.v(String.format("refreshServiceProfile for %s", mBluetoothDevice.getAddress()));
 
         List<BluetoothGattService> services = mBluetoothGatt.getServices();
-
+        UUID serviceUUID = null,notifyUUID = null;
         Map<UUID, Map<UUID, BluetoothGattCharacteristic>> newProfiles = new HashMap<UUID, Map<UUID, BluetoothGattCharacteristic>>();
 
         for (BluetoothGattService service : services) {
-            UUID serviceUUID = service.getUuid();
+            serviceUUID = service.getUuid();
 
             Map<UUID, BluetoothGattCharacteristic> map = newProfiles.get(serviceUUID);
 
@@ -107,7 +114,23 @@ public class BleConnectWorker implements Handler.Callback, IBleConnectWorker, IB
                 BluetoothLog.v("character: uuid = " + characterUUID);
                 map.put(character.getUuid(), character);
             }
+            for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
+                if ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
+                    notifyUUID = characteristic.getUuid();
+                    Log.d("TAG", "Found notify characteristic: " + notifyUUID);
+                }
+            }
         }
+
+        //found service and characteristic
+        BluetoothGattService service = mBluetoothGatt.getService(serviceUUID);//your_service_uuid 722e0001-4553-4523-5539-35022233cd4e
+        BluetoothGattCharacteristic notifyCharacteristic = service.getCharacteristic(notifyUUID);//your notify uuid 722e0003-4553-4523-5539-35022233cd4e
+        //BluetoothGattCharacteristic writeCharacteristic =  service.getCharacteristic(UUID.fromString("722e0002-4553-4523-5539-35022233cd4e"));
+        // set notify
+        mBluetoothGatt.setCharacteristicNotification(notifyCharacteristic, true);
+        BluetoothGattDescriptor descriptor = notifyCharacteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG);
+        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+        mBluetoothGatt.writeDescriptor(descriptor);
 
         mDeviceProfile.clear();
         mDeviceProfile.putAll(newProfiles);
@@ -215,12 +238,34 @@ public class BleConnectWorker implements Handler.Callback, IBleConnectWorker, IB
     public void onCharacteristicChanged(BluetoothGattCharacteristic characteristic, byte[] value) {
         checkRuntime();
 
-        BluetoothLog.v(String.format("onCharacteristicChanged for %s: value = %s, service = 0x%s, character = 0x%s",
+/*        BluetoothLog.v(String.format("onCharacteristicChanged for %s: value = %s, service = 0x%s, character = 0x%s",
                 mBluetoothDevice.getAddress(),
                 ByteUtils.byteToString(value),
                 characteristic.getService().getUuid(),
-                characteristic.getUuid()));
+                characteristic.getUuid()));*/
 
+        byte[] data = characteristic.getValue();
+        if (data.length == 6 && data[0] == 0x56 && data[5] == 0x76) {//battery charge info 1byte head + 2 voltage + 1 charge status + 1CRC+ 1 tail
+            // battery voltage
+            int batteryVoltage = ByteBuffer.wrap(Arrays.copyOfRange(data, 1, 3)).getShort() & 0xFFFF;
+            BluetoothLog.v( "Battery voltage: " + batteryVoltage + "mv");
+
+            short voltage = ByteBuffer.wrap(Arrays.copyOfRange(data, 1, 3)).order(ByteOrder.BIG_ENDIAN).getShort();
+            byte chargingStatus = data[3];
+            byte crc = data[4];
+
+            String formattedData = String.format(" Voltage: %d mv, Charging Status:  %d, CRC: 0x%02X", voltage, chargingStatus, crc);
+
+//            BluetoothLog.v( String.format("onCharacteristicChanged:%s,%s,%s,%s", gatt.getDevice().getName(), gatt.getDevice().getAddress(), uuid, formattedData));
+            Log.d("onCharacteristicChanged", formattedData);
+
+        }else {
+            String valueStr = new String(characteristic.getValue(), StandardCharsets.UTF_8);
+            String modifiedStr = valueStr.substring(1, valueStr.length() - 1);//remove head tail
+
+//            BluetoothLog.v(String.format("onCharacteristicChanged:%s,%s,%s,%s", gatt.getDevice().getName(), gatt.getDevice().getAddress(), uuid, modifiedStr));
+            Log.d("onCharacteristicChanged", "QR: " + modifiedStr);
+        }
         broadcastCharacterChanged(characteristic.getService().getUuid(), characteristic.getUuid(), value);
     }
 

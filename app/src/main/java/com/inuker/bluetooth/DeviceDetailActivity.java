@@ -1,5 +1,6 @@
 package com.inuker.bluetooth;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
@@ -13,7 +14,10 @@ import android.widget.TextView;
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
 import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
+import com.inuker.bluetooth.library.connect.BleConnectWorker;
 import com.inuker.bluetooth.library.model.BleGattProfile;
+import com.inuker.bluetooth.library.model.BleGattService;
+import com.inuker.bluetooth.library.model.BleGattCharacter;
 import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.inuker.bluetooth.library.utils.BluetoothUtils;
@@ -79,6 +83,7 @@ public class DeviceDetailActivity extends Activity {
     }
 
     private final BleConnectStatusListener mConnectStatusListener = new BleConnectStatusListener() {
+        @SuppressLint("DefaultLocale")
         @Override
         public void onConnectStatusChanged(String mac, int status) {
             BluetoothLog.v(String.format("DeviceDetailActivity onConnectStatusChanged %d in %s",
@@ -113,6 +118,28 @@ public class DeviceDetailActivity extends Activity {
             @Override
             public void onResponse(int code, BleGattProfile profile) {
                 BluetoothLog.v(String.format("profile:\n%s", profile));
+
+/*                if (profile != null && profile.getServices() != null) {
+                    for (BleGattService service : profile.getServices()) {
+                        UUID serviceUUID = service.getUuid();
+                        String notifyUUID = service.getUuid().toString();
+                        BluetoothLog.v("Service UUID: " + serviceUUID);
+
+                        for (BleGattCharacter characteristic : service.getCharacters()) {
+                            String notifyUUID = characteristic.getUuid().toString();
+                            BluetoothLog.v("Notify Characteristic UUID: " + notifyUUID);
+                        }
+                    }
+                    for (BleGattCharacter characteristic : service.getCharacters()) {
+                        UUID characteristicUUID = characteristic.getUuid();
+
+                        // 检查是否支持通知
+                        if ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
+                            System.out.println("Notify Characteristic UUID: " + characteristicUUID);
+                        }
+                    }
+                }*/
+
                 mTvTitle.setText(String.format("%s", mDevice.getAddress()));
                 mPbar.setVisibility(View.GONE);
                 mListView.setVisibility(View.VISIBLE);
