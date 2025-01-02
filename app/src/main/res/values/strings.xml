@@ -2,7 +2,6 @@
     <string name="app_name">FaytechLibScanner</string>
     <string name="action_settings">Settings</string>
 
-    <!-- 下拉刷新listView -->
     <string name="pull_to_refresh_pull_label">Drag down to refresh</string>
     <string name="string_update_time">Last update：%s</string>
     <string name="string_refreshing">Scanning Bluetooth…</string>

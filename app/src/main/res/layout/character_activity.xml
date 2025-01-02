@@ -35,7 +35,7 @@
             android:id="@+id/et_input_mtu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="MTU范围23~517"
+            android:hint="MTU range 23~517"
             android:inputType="number"/>
     </LinearLayout>
 

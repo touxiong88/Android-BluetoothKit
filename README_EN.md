@@ -15,7 +15,7 @@ and solved many android bluetooth inherent compatibility
 1. In Android Studio's build.gradle, add a line in dependencies:
 
 ```groovy
-implementation 'com.inuker.bluetooth:library:1.4.0'
+implementation 'com.faytech.bluetooth:library:1.4.0'
 ```
 
 If it is Eclipse, you can import bluetoothkit.jar and add the following to AndroidManifest.xml:
@@ -37,7 +37,7 @@ If it is Eclipse, you can import bluetoothkit.jar and add the following to Andro
 1、If you are building with Gradle, simply add the following line to the `dependencies` section of your `build.gradle` file:
 
 ```groovy
-implementation 'com.inuker.bluetooth:library:1.1.4'
+implementation 'com.faytech.bluetooth:library:1.1.4'
 ```
 
 2、Create a BluetoothClient as below: 

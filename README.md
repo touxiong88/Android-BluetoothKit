@@ -28,7 +28,7 @@ BluetoothKit---Android Bluetooth Framework
 1、在Android Studio的build.gradle中，在dependencies里添加一行:
 
 ```groovy
-implementation 'com.inuker.bluetooth:library:1.4.0'
+implementation 'com.faytech.bluetooth:library:1.4.0'
 ```
 
 如果是Eclipse，可以导入bluetoothkit.jar，在AndroidManifest.xml中添加如下：
@@ -46,7 +46,7 @@ implementation 'com.inuker.bluetooth:library:1.4.0'
     android:label="@string/app_name">
 
     <service
-        android:name="com.inuker.bluetooth.library.BluetoothService" />
+        android:name="com.faytech.bluetooth.library.BluetoothService" />
 </application>
 ```
 

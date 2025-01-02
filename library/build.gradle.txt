@@ -4,7 +4,7 @@ apply plugin: 'com.jfrog.bintray'
 version="1.4.0"
 
 android {
-    namespace "com.inuker.bluetooth.library"
+    namespace "com.faytech.bluetooth.library"
     compileSdkVersion 27
 
 
@@ -29,7 +29,7 @@ dependencies {
 
 def siteUrl = 'https://github.com/dingjikerbo/BluetoothKit' // ��Ŀ����ҳ
 def gitUrl = 'https://github.com/dingjikerbo/BluetoothKit.git' // Git�ֿ��url
-group = "com.inuker.bluetooth" // Maven Group ID for the artifact��һ������Ψһ�İ���
+group = "com.faytech.bluetooth" // Maven Group ID for the artifact��һ������Ψһ�İ���
 install {
     repositories.mavenInstaller {
         // This generates POM.xml with proper parameters
@@ -49,7 +49,7 @@ install {
                 developers {
                     developer {
                         id 'dingjikerbo'    //��д��һЩ������Ϣ
-                        name 'inuker'
+                        name 'faytech'
                         email 'dingjikerbo@gmail.com'
                     }
                 }

@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "com.inuker.bluetooth"
+    namespace "com.faytech.bluetooth"
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.inuker.bluetooth"
+        applicationId "com.faytech.bluetooth"
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
