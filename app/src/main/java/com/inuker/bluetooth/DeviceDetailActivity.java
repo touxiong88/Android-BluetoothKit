@@ -77,7 +77,7 @@ public class DeviceDetailActivity extends Activity {
 
         mTvTitle = (TextView) findViewById(R.id.title);
         mTvTitle.setText(mDevice.getAddress());
-
+        mTips = findViewById(R.id.tv_tips);
         mPbar = (ProgressBar) findViewById(R.id.pbar);
 
         mListView = (ListView) findViewById(R.id.listview);
@@ -128,6 +128,7 @@ public class DeviceDetailActivity extends Activity {
     private void connectDevice() {
         mTvTitle.setText(String.format("%s%s", getString(R.string.connecting), mDevice.getAddress()));
         mPbar.setVisibility(View.VISIBLE);
+        mTips.setVisibility(View.GONE);
         mListView.setVisibility(View.GONE);
 
         BleConnectOptions options = new BleConnectOptions.Builder()
@@ -185,6 +186,7 @@ public class DeviceDetailActivity extends Activity {
 
 //                    Log.i(TAG, String.format("onCharacteristicChanged:%s,%s,%s,%s", gatt.getDevice().getName(), gatt.getDevice().getAddress(), uuid, formattedData));
                                 Log.i(TAG, formattedData);
+                                MyApplication.toast(formattedData,0);
                                 logTv(formattedData);
 
                             }else {
@@ -192,12 +194,16 @@ public class DeviceDetailActivity extends Activity {
                                 String modifiedStr = valueStr.substring(1, valueStr.length() - 1);//remove head tail
 
 //                    Log.i(TAG, String.format("onCharacteristicChanged:%s,%s,%s,%s", gatt.getDevice().getName(), gatt.getDevice().getAddress(), uuid, modifiedStr));
-                                Log.i(TAG, " QR: " + modifiedStr);
+                                MyApplication.toast(" QR: " + modifiedStr,0);
+                                logTv("QR: " + modifiedStr);
                             }
                         }
 
                         @Override
                         public void onResponse(int code) {
+                            mPbar.setVisibility(View.GONE);
+                            mTips.setVisibility(View.VISIBLE);
+                            mListView.setVisibility(View.GONE);
                             if (code == REQUEST_SUCCESS) {
 
                             }

@@ -24,6 +24,7 @@ public class MyApplication extends Application {
         super.onCreate();
         instance = this;
         BluetoothContext.set(this);
+        sToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 
     }
     public static void toast(String txt, int duration) {
