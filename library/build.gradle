@@ -19,7 +19,11 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            archivesBaseName = "FaytechScannerlibrary"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            archivesBaseName = "FaytechScanneribrary"
         }
     }
 }
@@ -28,9 +32,9 @@ dependencies {
 }
 
 
-def siteUrl = 'https://github.com/dingjikerbo/BluetoothKit' // 项目的主页
-def gitUrl = 'https://github.com/dingjikerbo/BluetoothKit.git' // Git仓库的url
-group = "com.faytech.bluetooth" // Maven Group ID for the artifact，一般填你唯一的包名
+def siteUrl = 'https://github.com/dingjikerbo/BluetoothKit'
+def gitUrl = 'https://github.com/dingjikerbo/BluetoothKit.git'
+group = "com.faytech.bluetooth" // Maven Group ID for the artifact
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
@@ -45,7 +49,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "maven"
-        name = "BluetoothKit"    //发布到JCenter上的项目名字
+        name = "BluetoothKit"
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
