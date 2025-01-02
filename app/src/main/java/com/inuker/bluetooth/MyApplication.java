@@ -25,7 +25,6 @@ public class MyApplication extends Application {
         instance = this;
         BluetoothContext.set(this);
         sToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
-
     }
     public static void toast(String txt, int duration) {
         String utf8Txt = new String(txt.getBytes(), StandardCharsets.UTF_8);

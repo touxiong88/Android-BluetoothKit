@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BluetoothCommon</string>
+    <string name="app_name">FaytechLibScanner</string>
     <string name="action_settings">Settings</string>
 
     <!-- 下拉刷新listView -->
