@@ -128,17 +128,6 @@ public class MainActivity extends Activity {
                 mDevices.add(device);
                 mAdapter.setDataList(mDevices);
 
-//                Beacon beacon = new Beacon(device.scanRecord);
-//                BluetoothLog.v(String.format("beacon for %s\n%s", device.getAddress(), beacon.toString()));
-
-//                BeaconItem beaconItem = null;
-//                BeaconParser beaconParser = new BeaconParser(beaconItem);
-//                int firstByte = beaconParser.readByte(); // 读取第1个字节
-//                int secondByte = beaconParser.readByte(); // 读取第2个字节
-//                int productId = beaconParser.readShort(); // 读取第3,4个字节
-//                boolean bit1 = beaconParser.getBit(firstByte, 0); // 获取第1字节的第1bit
-//                boolean bit2 = beaconParser.getBit(firstByte, 1); // 获取第1字节的第2bit
-//                beaconParser.setPosition(0); // 将读取起点设置到第1字节处
             }
 
             if (mDevices.size() > 0) {

@@ -89,7 +89,7 @@ public class BleConnectWorker implements Handler.Callback, IBleConnectWorker, IB
         BluetoothLog.v(String.format("refreshServiceProfile for %s", mBluetoothDevice.getAddress()));
 
         List<BluetoothGattService> services = mBluetoothGatt.getServices();
-        UUID serviceUUID = null,notifyUUID = null;
+        UUID serviceUUID = null,notifyUUID = null,writeUUID = null;
         Map<UUID, Map<UUID, BluetoothGattCharacteristic>> newProfiles = new HashMap<UUID, Map<UUID, BluetoothGattCharacteristic>>();
 
         for (BluetoothGattService service : services) {
@@ -114,15 +114,17 @@ public class BleConnectWorker implements Handler.Callback, IBleConnectWorker, IB
             for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
                 if ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
                     notifyUUID = characteristic.getUuid();
-                    Log.d("TAG", "Found notify characteristic: " + notifyUUID);
+                    BluetoothLog.v("Found notify characteristic: " + notifyUUID);
+                } else if ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_WRITE) != 0) {
+                    writeUUID = characteristic.getUuid();
                 }
             }
         }
 
         //found service and characteristic
-        BluetoothGattService service = mBluetoothGatt.getService(serviceUUID);//your_service_uuid 722e0001-4553-4523-5539-35022233cd4e
-        BluetoothGattCharacteristic notifyCharacteristic = service.getCharacteristic(notifyUUID);//your notify uuid 722e0003-4553-4523-5539-35022233cd4e
-        //BluetoothGattCharacteristic writeCharacteristic =  service.getCharacteristic(UUID.fromString("722e0002-4553-4523-5539-35022233cd4e"));
+        BluetoothGattService service = mBluetoothGatt.getService(serviceUUID);//722e0001-4553-4523-5539-35022233cd4e
+        BluetoothGattCharacteristic notifyCharacteristic = service.getCharacteristic(notifyUUID);//722e0003-4553-4523-5539-35022233cd4e
+//        BluetoothGattCharacteristic writeCharacteristic =  service.getCharacteristic(writeUUID);//722e0002-4553-4523-5539-35022233cd4e
         // set notify
         mBluetoothGatt.setCharacteristicNotification(notifyCharacteristic, true);
         BluetoothGattDescriptor descriptor = notifyCharacteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG);

@@ -18,4 +18,5 @@
     <string name="devices">devices list</string>
 
     <string name="connecting">connecting</string>
+    <string name="unlock_scanner">unlock scanner</string>
 </resources>

@@ -72,7 +72,7 @@ public class BleGattCharacter implements Parcelable {
     }
 
     public int getProperty() {
-        return property;
+        return property ;
     }
 
     public void setProperty(int property) {
