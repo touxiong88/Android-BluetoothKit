@@ -19,4 +19,5 @@
 
     <string name="connecting">connecting</string>
     <string name="unlock_scanner">unlock scanner</string>
+    <string name="lock_scanner">lock scanner</string>
 </resources>

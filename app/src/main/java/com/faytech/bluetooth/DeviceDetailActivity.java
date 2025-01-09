@@ -50,7 +50,7 @@ public class DeviceDetailActivity extends Activity {
     private TextView mTips;
     private ProgressBar mPbar;
     private ListView mListView;
-    private Button unlockBtn;
+    private Button unlockBtn,lockBtn;
     private DeviceDetailAdapter mAdapter;
 
     private SearchResult mResult;
@@ -78,7 +78,7 @@ public class DeviceDetailActivity extends Activity {
         mTips = findViewById(R.id.tv_tips);
         mPbar = (ProgressBar) findViewById(R.id.pbar);
         unlockBtn = (Button) findViewById(R.id.btn_unlock);
-
+        lockBtn = (Button) findViewById(R.id.btn_lock);
         mListView = (ListView) findViewById(R.id.listview);
         mAdapter = new DeviceDetailAdapter(this, mDevice);
         mListView.setAdapter(mAdapter);
@@ -102,6 +102,14 @@ public class DeviceDetailActivity extends Activity {
             public void onClick(View v) {
                 BluetoothLog.d("Scanner unlock");
                 unlockScanner();
+            }
+        });
+
+        lockBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BluetoothLog.d("Scanner lock");
+                lockScanner();
             }
         });
 
@@ -242,6 +250,18 @@ public class DeviceDetailActivity extends Activity {
             public void onResponse(int code) {
                 if (code != REQUEST_SUCCESS) {
                     BluetoothLog.e("unlock write err %d" + code);
+                }
+            }
+        });
+    }
+
+    private void lockScanner(){
+        byte[] lockCmd = {0x36,0x35,0x34,0x33,0x32,0x31};//"654321" lock scanner
+        ClientManager.getClient().write(mac, serviceUuid, writeUuid,lockCmd, new BleWriteResponse() {
+            @Override
+            public void onResponse(int code) {
+                if (code != REQUEST_SUCCESS) {
+                    BluetoothLog.e("lock write err %d" + code);
                 }
             }
         });
