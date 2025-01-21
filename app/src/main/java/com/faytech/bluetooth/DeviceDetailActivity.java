@@ -196,16 +196,16 @@ public class DeviceDetailActivity extends Activity {
                         @Override
                         public void onNotify(UUID service, UUID character, byte[] data) {//notify receive value
 
-                            if (data.length == 6 && data[0] == 0x56 && data[5] == 0x76) {//battery charge info 1byte head + 2 voltage + 1 charge status + 1CRC+ 1 tail
-                                // battery voltage
-                                int batteryVoltage = ByteBuffer.wrap(Arrays.copyOfRange(data, 1, 3)).getShort() & 0xFFFF;
-                                BluetoothLog.d("Battery voltage: " + batteryVoltage + "mv");
+                            if (data.length == 6 && data[0] == 0x56 && data[5] == 0x76) {//battery charge info 1byte head + 2 level + 1 charge status + 1CRC+ 1 tail
+                                // battery level
+                                int batteryLevel = ByteBuffer.wrap(Arrays.copyOfRange(data, 1, 3)).getShort() & 0xFFFF;
+                                BluetoothLog.d("Battery level: " + batteryLevel + " %");
 
-                                short voltage = ByteBuffer.wrap(Arrays.copyOfRange(data, 1, 3)).order(ByteOrder.BIG_ENDIAN).getShort();
+                                short level = ByteBuffer.wrap(Arrays.copyOfRange(data, 1, 3)).order(ByteOrder.BIG_ENDIAN).getShort();
                                 byte chargingStatus = data[3];
                                 byte crc = data[4];
 
-                                @SuppressLint("DefaultLocale") String formattedData = String.format("Voltage: %d mv, Charging Status:  %d, CRC: 0x%02X", voltage, chargingStatus, crc);
+                                @SuppressLint("DefaultLocale") String formattedData = String.format("Battery level: %d , Charging Status:  %d, CRC: 0x%02X", level, chargingStatus, crc);
 
 //                    BluetoothLog.d(String.format("onCharacteristicChanged:%s,%s,%s,%s", gatt.getDevice().getName(), gatt.getDevice().getAddress(), uuid, formattedData));
                                 BluetoothLog.d(formattedData);

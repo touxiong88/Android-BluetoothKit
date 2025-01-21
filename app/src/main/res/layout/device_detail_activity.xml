@@ -3,42 +3,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <LinearLayout
+        android:id="@+id/title_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     <TextView
         android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:textSize="20sp"
-        android:textColor="#ffffff"
-        android:gravity="center"
-        android:layout_alignParentTop="true"
-        android:background="@color/colorPrimary"
-        android:layout_height="45dp" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary" />
 
     <Button
         android:id="@+id/btn_lock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/loading_bar_text_color"
         android:text="@string/lock_scanner"
-        android:background="@color/colorPrimary"
-        tools:ignore="RelativeOverlap" />
+        android:background="@color/colorPrimary" />
 
     <Button
         android:id="@+id/btn_unlock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
         android:textColor="@color/colorAccent"
         android:text="@string/unlock_scanner"
-        android:background="@color/colorPrimary"
-        tools:ignore="RelativeOverlap" />
-
+        android:background="@color/colorPrimary"/>
+    </LinearLayout>
     <ListView
         android:id="@+id/listview"
-        android:layout_below="@id/title"
+        android:layout_below="@id/title_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
