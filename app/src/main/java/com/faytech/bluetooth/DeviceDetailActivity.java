@@ -214,11 +214,8 @@ public class DeviceDetailActivity extends Activity {
 
                             }else {
                                 String valueStr = new String(data, StandardCharsets.UTF_8);
-                                String modifiedStr = valueStr.substring(1, valueStr.length() - 1);//remove head tail
-
-//                    BluetoothLog.d(String.format("onCharacteristicChanged:%s,%s,%s,%s", gatt.getDevice().getName(), gatt.getDevice().getAddress(), uuid, modifiedStr));
-                                MyApplication.toast(" QR: " + modifiedStr,0);
-                                logTv("QR: " + modifiedStr);
+                                MyApplication.toast(" QR: " + valueStr,0);
+                                logTv("QR: " + valueStr);
                             }
                         }
 
