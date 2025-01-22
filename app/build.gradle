@@ -39,4 +39,5 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.1'
 //    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(path: ':library')
+    implementation project(path: ':serialport')
 }

@@ -12,6 +12,7 @@ public class MyApplication extends Application {
 
     private static MyApplication instance;
     private static Toast sToast;
+    private static  String macAddress;
     public static Application getInstance() {
         return instance;
     }
@@ -28,5 +29,13 @@ public class MyApplication extends Application {
         sToast.setText(utf8Txt);
         sToast.setDuration(duration);
         sToast.show();
+    }
+
+    public static void setMacAddress(String mac) {
+        macAddress = mac;
+    }
+
+    public static String getMacAddress() {
+        return macAddress;
     }
 }

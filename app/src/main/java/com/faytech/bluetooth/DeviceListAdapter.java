@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.faytech.bluetooth.library.beacon.Beacon;
 import com.faytech.bluetooth.library.search.SearchResult;
-import com.faytech.bluetooth.library.utils.BluetoothLog;
 
 import java.util.ArrayList;
 import java.util.Collections;
