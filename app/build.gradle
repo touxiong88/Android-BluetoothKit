@@ -29,6 +29,7 @@ android {
 }
 
 dependencies {
+    implementation project(':serialport')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -39,5 +40,4 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.1'
 //    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(path: ':library')
-    implementation project(path: ':serialport')
 }

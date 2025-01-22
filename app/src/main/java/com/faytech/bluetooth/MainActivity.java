@@ -91,7 +91,7 @@ public class MainActivity extends Activity {
             }
         });
 
-/*      for ble auto pair
+      //for ble auto pair
         final BluetoothManager bluetoothManager =(BluetoothManager) getSystemService(this.BLUETOOTH_SERVICE);
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
         bluetoothAdapter.enable();
@@ -101,7 +101,7 @@ public class MainActivity extends Activity {
             // Implement gattCallback methods (e.g., onConnectionStateChange, onServicesDiscovered, onCharacteristicRead)
             // ...
         };
-        bluetoothGatt = device.connectGatt(this, false, gattCallback);*/
+        bluetoothGatt = device.connectGatt(this, false, gattCallback);
     }
 
     private void searchDevice() {
