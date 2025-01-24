@@ -1,5 +1,7 @@
 package tp.faytech.serialport;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import java.io.File;
@@ -14,13 +16,14 @@ import tp.faytech.serialport.stick.AbsStickPackageHelper;
 import tp.faytech.serialport.stick.BaseStickPackageHelper;
 
 public abstract class SerialHelper {
+    private static final String TAG = "SerialPort";
     private SerialPort mSerialPort;
     private OutputStream mOutputStream;
     private InputStream mInputStream;
     private ReadThread mReadThread;
     private SendThread mSendThread;
-    private String sPort = "/dev/ttyS1";
-    private int iBaudRate = 9600;
+    private String sPort = "/dev/ttyS3";
+    private int iBaudRate = 115200;
     private int stopBits = 1;
     private int dataBits = 8;
     private int parity = 0;
@@ -70,17 +73,23 @@ public abstract class SerialHelper {
 
     private class ReadThread
             extends Thread {
+        private Handler mHandler;
         private ReadThread() {
         }
 
         public void run() {
+
             super.run();
+            Looper.prepare();
+            mHandler = new Handler();
+            Looper.loop();
             while (!isInterrupted()) {
                 try {
+                    Log.d(TAG, "ReadThread 1");
                     if (SerialHelper.this.mInputStream == null) {
                         return;
                     }
-
+                    Log.d(TAG, "ReadThread 2");
                     byte[] buffer = getStickPackageHelper().execute(SerialHelper.this.mInputStream);
                     if (buffer != null && buffer.length > 0) {
                         ComBean ComRecData = new ComBean(SerialHelper.this.sPort, buffer, buffer.length);
@@ -89,7 +98,7 @@ public abstract class SerialHelper {
 
                 } catch (Throwable e) {
                      if (e.getMessage() != null) {
-                        Log.e("error", e.getMessage());
+                        Log.e(TAG, e.getMessage());
                     }
                     return;
                 }

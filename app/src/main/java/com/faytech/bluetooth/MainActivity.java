@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,23 +25,34 @@ import com.faytech.bluetooth.view.PullToRefreshFrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
 
+import android.util.Log;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+
+import tp.faytech.serialport.SerialHelper;
+import tp.faytech.serialport.bean.ComBean;
+
+import android.os.CountDownTimer;
 public class MainActivity extends Activity {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String deviceMacAddress = "B0:D5:9D:6F:E7:A5";
-    private BluetoothDevice device;
-    private BluetoothGatt bluetoothGatt;
-    private BluetoothGattCallback gattCallback;
     private PullToRefreshFrameLayout mRefreshLayout;
     private PullRefreshListView mListView;
     private DeviceListAdapter mAdapter;
     private TextView mTvTitle;
-
     private List<SearchResult> mDevices;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         mDevices = new ArrayList<SearchResult>();
@@ -91,17 +103,12 @@ public class MainActivity extends Activity {
             }
         });
 
-      //for ble auto pair
-        final BluetoothManager bluetoothManager =(BluetoothManager) getSystemService(this.BLUETOOTH_SERVICE);
-        BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
-        bluetoothAdapter.enable();
-        device = bluetoothAdapter.getRemoteDevice (deviceMacAddress);// BLE device MAC address from UART service settings provider
-        // Define your gattCallback here
-        gattCallback = new BluetoothGattCallback() {
-            // Implement gattCallback methods (e.g., onConnectionStateChange, onServicesDiscovered, onCharacteristicRead)
-            // ...
-        };
-        bluetoothGatt = device.connectGatt(this, false, gattCallback);
+        if(MyApplication.getMacAddress() != null){
+            Intent intent = new Intent();
+            intent.setClass(MyApplication.getInstance(), MainActivity.class);
+            intent.putExtra("mac", "E9:75:57:3F:D2:60");
+            MyApplication.getInstance().startActivity(intent);
+        }
     }
 
     private void searchDevice() {

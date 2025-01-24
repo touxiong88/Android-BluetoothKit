@@ -15,6 +15,10 @@ public class ScannerStatusReceiver extends BroadcastReceiver {
         String status = intent.getStringExtra("status");
         if ("insert".equals(status)) {
             Log.d(TAG, "Received scanner insert boardcast");
+/*          Intent mIntent = new Intent();
+            mIntent.setClass(MyApplication.getInstance(), MainActivity.class);
+            mIntent.putExtra("mac", MyApplication.getMacAddress());
+            MyApplication.getInstance().startActivity(mIntent);*/
         } else if ("unplug".equals(status)) {
             Log.d(TAG, "Received scanner unplug broadcast");
         }
