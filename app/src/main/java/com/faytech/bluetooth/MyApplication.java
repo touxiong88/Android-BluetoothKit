@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import com.faytech.bluetooth.library.BluetoothContext;
+import com.faytech.bluetooth.library.utils.BluetoothLog;
 
 import java.nio.charset.StandardCharsets;
 import android.util.Log;
@@ -27,13 +28,14 @@ public class MyApplication extends Application {
     public static Application getInstance() {
         return instance;
     }
-    private static final String TAG = "SerialPort";
+    private static final String TAG = "FtBLE";
     private SerialHelper serialHelper;
 
     private ScannerStatusReceiver mScannerStatusReceiver;
     private MyTimer mMyTimer = new MyTimer();
 
     private int scannerStatus = 0; // 0:unplug 1:insert
+
 
     @Override
     public void onCreate() {
@@ -51,9 +53,9 @@ public class MyApplication extends Application {
             @Override
             protected void onDataReceived(final ComBean comBean) {
                 String valueStr = new String(comBean.bRec, StandardCharsets.UTF_8);
-                if (valueStr.startsWith("MAC=")) {
+                if (valueStr.startsWith("MAC=")){
                     String macAddress = valueStr.substring(4, 21);
-                    Log.d(TAG, "macAddress: " + macAddress);
+                    BluetoothLog.d( "macAddress: " + macAddress);
                     if (scannerStatus == 0) {
                         MyApplication.setMacAddress(macAddress);
                         // Scanner inserted, send broadcast
@@ -61,7 +63,7 @@ public class MyApplication extends Application {
                         intent.setAction("com.faytech.serialport");
                         intent.putExtra("status", "insert");
                         sendBroadcast(intent);
-                        Log.d(TAG, "send insert broadcast: ");
+                        BluetoothLog.d( "send insert broadcast: ");
                         scannerStatus = 1;
                         mMyTimer.reset();
                     }
@@ -69,10 +71,17 @@ public class MyApplication extends Application {
             }
         };
 
+        serialHelper.close();
+        serialHelper.setPort("/dev/ttyS3");
+        serialHelper.setBaudRate("115200");
+        serialHelper.setDataBits(8);//8 bit data
+        serialHelper.setStopBits(1);//1 bit stop bit
+        serialHelper.setFlowCon(0);//NONE
+
         try {
             serialHelper.open();
         } catch (IOException e) {
-            Log.e(TAG, "Error opening serial port", e);
+            throw new RuntimeException(e);
         }
 
         mMyTimer.start();
@@ -102,6 +111,7 @@ public class MyApplication extends Application {
                 @Override
                 public void onTick(long millisUntilFinished) {
                     // every senond call this method
+                    BluetoothLog.d( "MyTimer onTick");
                 }
 
                 @Override
@@ -110,7 +120,7 @@ public class MyApplication extends Application {
                     intent.setAction("com.faytech.serialport");
                     intent.putExtra("status", "unplug");
                     sendBroadcast(intent);
-                    Log.d(TAG, "send unplug  boardcast: ");
+                    BluetoothLog.d( "send unplug  boardcast: ");
                     scannerStatus = 0;
                 }
             }.start();

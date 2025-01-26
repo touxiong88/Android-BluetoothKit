@@ -1,5 +1,6 @@
 package tp.faytech.serialport;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -16,12 +17,10 @@ import tp.faytech.serialport.stick.AbsStickPackageHelper;
 import tp.faytech.serialport.stick.BaseStickPackageHelper;
 
 public abstract class SerialHelper {
-    private static final String TAG = "SerialPort";
+    private static final String TAG = "FtBLE";
     private SerialPort mSerialPort;
-    private OutputStream mOutputStream;
     private InputStream mInputStream;
     private ReadThread mReadThread;
-    private SendThread mSendThread;
     private String sPort = "/dev/ttyS3";
     private int iBaudRate = 115200;
     private int stopBits = 1;
@@ -42,13 +41,9 @@ public abstract class SerialHelper {
     public void open()
             throws SecurityException, IOException, InvalidParameterException {
         this.mSerialPort = new SerialPort(new File(this.sPort), this.iBaudRate, this.stopBits, this.dataBits, this.parity, this.flowCon, this.flags);
-        this.mOutputStream = this.mSerialPort.getOutputStream();
         this.mInputStream = this.mSerialPort.getInputStream();
         this.mReadThread = new ReadThread();
         this.mReadThread.start();
-        this.mSendThread = new SendThread();
-        this.mSendThread.setSuspendFlag();
-        this.mSendThread.start();
         this._isOpen = true;
     }
 
@@ -63,17 +58,9 @@ public abstract class SerialHelper {
         this._isOpen = false;
     }
 
-    public void send(byte[] bOutArray) {
-        try {
-            this.mOutputStream.write(bOutArray);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private class ReadThread
-            extends Thread {
-        private Handler mHandler;
+                    extends Thread {
+       private Handler mHandler;
         private ReadThread() {
         }
 
@@ -82,14 +69,15 @@ public abstract class SerialHelper {
             super.run();
             Looper.prepare();
             mHandler = new Handler();
-            Looper.loop();
+
+            Log.d(TAG, "ReadThread 0");
             while (!isInterrupted()) {
                 try {
-                    Log.d(TAG, "ReadThread 1");
+//                    Log.d(TAG, "ReadThread 1");
                     if (SerialHelper.this.mInputStream == null) {
                         return;
                     }
-                    Log.d(TAG, "ReadThread 2");
+//                    Log.d(TAG, "ReadThread 2");
                     byte[] buffer = getStickPackageHelper().execute(SerialHelper.this.mInputStream);
                     if (buffer != null && buffer.length > 0) {
                         ComBean ComRecData = new ComBean(SerialHelper.this.sPort, buffer, buffer.length);
@@ -98,47 +86,15 @@ public abstract class SerialHelper {
 
                 } catch (Throwable e) {
                      if (e.getMessage() != null) {
+//                         Log.d(TAG, "ReadThread 3");
                         Log.e(TAG, e.getMessage());
                     }
                     return;
                 }
             }
+            Looper.loop();
         }
     }
-
-    private class SendThread
-            extends Thread {
-        public boolean suspendFlag = true;
-
-        private SendThread() {
-        }
-
-        public void run() {
-            super.run();
-            while (!isInterrupted()) {
-                synchronized (this) {
-                    while (this.suspendFlag) {
-                        try {
-                            wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                SerialHelper.this.send(SerialHelper.this.getbLoopData());
-                try {
-                    Thread.sleep(SerialHelper.this.iDelay);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        public void setSuspendFlag() {
-            this.suspendFlag = true;
-        }
-    }
-
 
     public boolean setBaudRate(int iBaud) {
         if (this._isOpen) {
