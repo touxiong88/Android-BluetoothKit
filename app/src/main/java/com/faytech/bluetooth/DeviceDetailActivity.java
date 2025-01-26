@@ -67,9 +67,10 @@ public class DeviceDetailActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.device_detail_activity);
 
-        Intent intent = getIntent();
-        mac = intent.getStringExtra("mac");
-        mResult = intent.getParcelableExtra("device");
+//        Intent intent = getIntent();
+//        mac = intent.getStringExtra("mac");
+//        mResult = intent.getParcelableExtra("device");
+        mac = MyApplication.macAddress;
 
         mDevice = BluetoothUtils.getRemoteDevice(mac);
 

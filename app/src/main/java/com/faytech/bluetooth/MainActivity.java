@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -20,11 +21,13 @@ import com.faytech.bluetooth.library.search.SearchRequest;
 import com.faytech.bluetooth.library.search.SearchResult;
 import com.faytech.bluetooth.library.search.response.SearchResponse;
 import com.faytech.bluetooth.library.utils.BluetoothLog;
+import com.faytech.bluetooth.service.MyService;
 import com.faytech.bluetooth.view.PullRefreshListView;
 import com.faytech.bluetooth.view.PullToRefreshFrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -40,6 +43,7 @@ import tp.faytech.serialport.SerialHelper;
 import tp.faytech.serialport.bean.ComBean;
 
 import android.os.CountDownTimer;
+
 public class MainActivity extends Activity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private PullToRefreshFrameLayout mRefreshLayout;
@@ -66,9 +70,8 @@ public class MainActivity extends Activity {
         mListView.setAdapter(mAdapter);
 
 
-
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Log.d(TAG,"This machine does not support low-power Bluetooth！");
+            Log.d(TAG, "This machine does not support low-power Bluetooth！");
             finish();
             return;
         }
@@ -103,12 +106,13 @@ public class MainActivity extends Activity {
             }
         });
 
-        if(MyApplication.getMacAddress() != null){
-            Intent intent = new Intent();
-            intent.setClass(MyApplication.getInstance(), MainActivity.class);
-            intent.putExtra("mac", "E9:75:57:3F:D2:60");
-            MyApplication.getInstance().startActivity(intent);
-        }
+        startMyService();
+    }
+
+    private void startMyService(){
+        Log.d(TAG,"startMyService");
+        Intent intent = new Intent(this, MyService.class);
+        startService(intent);
     }
 
     private void searchDevice() {

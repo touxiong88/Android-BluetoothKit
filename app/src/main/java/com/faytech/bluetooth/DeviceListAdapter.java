@@ -1,5 +1,7 @@
 package com.faytech.bluetooth;
 
+import static android.support.v4.content.ContextCompat.startActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 
 import com.faytech.bluetooth.library.beacon.Beacon;
 import com.faytech.bluetooth.library.search.SearchResult;
+import com.faytech.bluetooth.service.MyService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -93,9 +96,11 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchR
 
             @Override
             public void onClick(View v) {
+
+                MyApplication.macAddress = result.getAddress();
                 Intent intent = new Intent();
                 intent.setClass(mContext, DeviceDetailActivity.class);
-                intent.putExtra("mac", result.getAddress());
+                //intent.putExtra("mac", result.getAddress());
                 mContext.startActivity(intent);
             }
         });

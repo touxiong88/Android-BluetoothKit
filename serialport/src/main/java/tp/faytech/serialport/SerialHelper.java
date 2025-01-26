@@ -31,6 +31,7 @@ public abstract class SerialHelper {
     private boolean _isOpen = false;
     private byte[] _bLoopData = {48};
     private int iDelay = 500;
+    private boolean loop = false;
 
 
     public SerialHelper(String sPort, int iBaudRate) {
@@ -42,6 +43,7 @@ public abstract class SerialHelper {
             throws SecurityException, IOException, InvalidParameterException {
         this.mSerialPort = new SerialPort(new File(this.sPort), this.iBaudRate, this.stopBits, this.dataBits, this.parity, this.flowCon, this.flags);
         this.mInputStream = this.mSerialPort.getInputStream();
+        loop = true;
         this.mReadThread = new ReadThread();
         this.mReadThread.start();
         this._isOpen = true;
@@ -59,19 +61,14 @@ public abstract class SerialHelper {
     }
 
     private class ReadThread
-                    extends Thread {
-       private Handler mHandler;
+            extends Thread {
         private ReadThread() {
         }
 
         public void run() {
-
             super.run();
-            Looper.prepare();
-            mHandler = new Handler();
-
             Log.d(TAG, "ReadThread 0");
-            while (!isInterrupted()) {
+            while (loop && !isInterrupted()) {
                 try {
 //                    Log.d(TAG, "ReadThread 1");
                     if (SerialHelper.this.mInputStream == null) {
@@ -80,19 +77,20 @@ public abstract class SerialHelper {
 //                    Log.d(TAG, "ReadThread 2");
                     byte[] buffer = getStickPackageHelper().execute(SerialHelper.this.mInputStream);
                     if (buffer != null && buffer.length > 0) {
-                        ComBean ComRecData = new ComBean(SerialHelper.this.sPort, buffer, buffer.length);
-                        SerialHelper.this.onDataReceived(ComRecData);
+                        SerialHelper.this.onDataReceived(buffer);
                     }
-
+                    try {
+                        Thread.sleep(2000L);
+                    }catch (Exception e){
+                    }
                 } catch (Throwable e) {
-                     if (e.getMessage() != null) {
+                    if (e.getMessage() != null) {
 //                         Log.d(TAG, "ReadThread 3");
                         Log.e(TAG, e.getMessage());
                     }
                     return;
                 }
             }
-            Looper.loop();
         }
     }
 
@@ -142,15 +140,12 @@ public abstract class SerialHelper {
     }
 
 
-
     public byte[] getbLoopData() {
         return this._bLoopData;
     }
 
 
-
-
-    protected abstract void onDataReceived(ComBean paramComBean);
+    protected abstract void onDataReceived(byte[] data);
 
     private AbsStickPackageHelper mStickPackageHelper = new BaseStickPackageHelper();
 
